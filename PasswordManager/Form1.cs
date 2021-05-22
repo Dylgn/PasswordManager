@@ -28,34 +28,6 @@ namespace PasswordManager
             System.IO.Directory.CreateDirectory(path + "/PasswordManager");
             path = path + "/PasswordManager/";
         }
-        /*private void tempEncrypt()
-        {
-            // Creates file with "Test String" inside
-            //byte[] test = Encoding.ASCII.GetBytes("Test String");
-            var file = File.Create("test.txt");
-            //file.Write(test, 0, test.Length);
-            file.Close();
-
-            // Saves key and IV for decryption
-            var temp = new AesCryptoServiceProvider();
-            Console.WriteLine(System.Convert.ToBase64String(temp.Key));
-            Console.WriteLine(System.Convert.ToBase64String(temp.IV));
-
-            Encryptor.Encrypt(file.Name, temp.Key, temp.IV);
-        }
-
-        private void tempDecrypt()
-        {
-            // Opens encrypted file
-            var file = File.OpenRead("test.txt");
-            var temp = new AesCryptoServiceProvider();
-            temp.Key = System.Convert.FromBase64String("Vj/FQKRh0A0JtjDz/X4AMXv5I8aD1WPRQDrHWV1UFEQ=");
-            //temp.IV = System.Convert.FromBase64String("oNXHQw1JSzMQ9pkvYIr8zQ==");
-            var tempIV = new byte[temp.IV.Length];
-            file.Read(tempIV, 0, tempIV.Length);
-            file.Close();
-            Encryptor.Decrypt(file.Name, temp.Key, tempIV);
-        }*/
         private void btnSignIn_Click(object sender, EventArgs e)
         {
             SignInObjects(Buttons.Login);
@@ -140,9 +112,6 @@ namespace PasswordManager
         }
         private void btnSignOut_Click(object sender, EventArgs e)
         {
-            //BindingSource comboSource = new BindingSource();
-            //comboSource.DataSource = grdCombos.DataSource;
-            //List<Combo> combos = (List<Combo>)comboSource.DataSource;
             // Gets the combos from the data grid and writes them to the file
             List<Combo> combos = GetCombosFromGrid();
             byte[] IV = GetIV(path + fileName);
@@ -213,18 +182,6 @@ namespace PasswordManager
             byte[] array = new byte[length];
             file.Read(array, 0, array.Length);
             return array;
-            /*using (MemoryStream ms = new MemoryStream())
-            {
-                // Gets description from the file
-                byte[] array = new byte[length];
-                file.Read(array, (int)file.Position, array.Length);
-
-                // Writes the description to the stream and sets length
-                ms.Write(array, 0, array.Length);
-                ms.SetLength(length);
-
-                return ms.ToArray();
-            }*/
         }
         private void SignInObjects(Buttons a)
         {
