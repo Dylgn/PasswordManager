@@ -13,11 +13,52 @@ namespace PasswordManager
         String fileName = "";
         String key = "";
 
+        // UI
         private enum Buttons
         {
             SignedOut = 1,
             Login,
             SignedIn
+        }
+        private void SignInObjects(Buttons a)
+        {
+            grdCombos.Enabled = false;
+            grpSign.Visible = false;
+            btnSignIn.Visible = false;
+            btnSignUp.Visible = false;
+            btnSignOut.Visible = false;
+            lblUser.Visible = false;
+            lblKey.Visible = false;
+            txtUser.Visible = false;
+            txtKey.Visible = false;
+            btnEnter.Visible = false;
+            btnCancel.Visible = false;
+            // Only make certain objects visible
+            switch (a)
+            {
+                case Buttons.SignedOut:
+                    btnSignIn.Visible = true;
+                    btnSignUp.Visible = true;
+                    txtUser.Text = "";
+                    txtKey.Text = "";
+                    break;
+                case Buttons.Login:
+                    grpSign.Visible = true;
+                    lblUser.Visible = true;
+                    lblKey.Visible = true;
+                    txtUser.Visible = true;
+                    txtKey.Visible = true;
+                    btnEnter.Visible = true;
+                    btnCancel.Visible = true;
+                    break;
+                case Buttons.SignedIn:
+                    grdCombos.Enabled = true;
+                    grpSign.Visible = false;
+                    btnSignOut.Visible = true;
+                    txtUser.Text = "";
+                    txtKey.Text = "";
+                    break;
+            }
         }
         public frmMain()
         {
@@ -28,10 +69,12 @@ namespace PasswordManager
             System.IO.Directory.CreateDirectory(path + "/PasswordManager");
             path = path + "/PasswordManager/";
         }
+
         private void btnSignIn_Click(object sender, EventArgs e)
         {
             SignInObjects(Buttons.Login);
         }
+        // ACCOUNT CREATION
         private void btnSignUp_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you want to create a new account?", "Create Profile", MessageBoxButtons.YesNo);
@@ -75,6 +118,26 @@ namespace PasswordManager
                 }   
             }
         }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            txtUser.Text = "";
+            txtKey.Text = "";
+            SignInObjects(Buttons.SignedOut);
+        }
+        private bool ContainsIllegalCharacters(String s)
+        {
+            // Returns true if you're using characters unsuable in file names
+            string[] chars = new string[] { "/", @"\", ":", "*", "?", "\"", "<", ">", "|" };
+            foreach (string character in chars)
+            {
+                if (s.Contains(character))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // SIGN IN / DECRYPTION
         private void btnEnter_Click(object sender, EventArgs e)
         {
             fileName = txtUser.Text.Trim() + ".pm";
@@ -110,7 +173,58 @@ namespace PasswordManager
                 MessageBox.Show("This user does not exist!", "Sign In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void ListCombos()
+        {
+            // List combos in the data grid
+            BindingSource combos = new BindingSource();
+            combos.DataSource = ReadCombos();
+            grdCombos.DataSource = combos;
+        }
+        private List<Combo> ReadCombos()
+        {
+            // Read combos from file
+            List<Combo> combos = new List<Combo>();
+            using (FileStream file = File.OpenRead(path + fileName))
+            {
+                // Skips IV at start of file
+                file.Position = 16;
+                while (file.Position < file.Length)
+                {
+                    // Get the description and password from file
+                    byte[] description = GetFromFile(file, 64);
+                    byte[] password = GetFromFile(file, 256);
+
+                    // Add description/password combo to the list
+                    combos.Add(new Combo(Encoding.ASCII.GetString(description), Encoding.ASCII.GetString(password)));
+                }
+            }
+            return combos;
+        }
+        private byte[] GetFromFile(FileStream file, int length)
+        {
+            // Gets data from the file
+            Console.WriteLine(file.Position);
+            byte[] array = new byte[length];
+            file.Read(array, 0, array.Length);
+
+            return array;
+        }
+        // SIGN OUT / ENCRYPTION
         private void btnSignOut_Click(object sender, EventArgs e)
+        {
+            // Encrypts passwords when you sign out
+            EncryptPasswords();
+        }
+        private void frmMain_FormClosing(object sender, EventArgs e)
+        {
+            // Only encrypts if you're signed in
+            if (!fileName.Equals(""))
+            {
+                // Encrypts passwords when you close the form
+                EncryptPasswords();
+            }
+        }
+        private void EncryptPasswords()
         {
             // Gets the combos from the data grid and writes them to the file
             List<Combo> combos = GetCombosFromGrid();
@@ -139,12 +253,6 @@ namespace PasswordManager
             grdCombos.Rows.Clear();
             SignInObjects(Buttons.SignedOut);
         }
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            txtUser.Text = "";
-            txtKey.Text = "";
-            SignInObjects(Buttons.SignedOut);
-        }
         private List<Combo> GetCombosFromGrid()
         {
             List<Combo> combos = new List<Combo>();
@@ -154,83 +262,6 @@ namespace PasswordManager
                 combos.Add(new Combo((string)row.Cells[0].Value, (string) row.Cells[1].Value));
             }
             return combos;
-        }
-        private void ListCombos()
-        {
-            // List combos in the data grid
-            BindingSource combos = new BindingSource();
-            combos.DataSource = ReadCombos();
-            grdCombos.DataSource = combos;
-        }
-        private List<Combo> ReadCombos()
-        {
-            List<Combo> combos = new List<Combo>();
-            using (FileStream file = File.OpenRead(path + fileName))
-            {
-                // Skips IV at start of file
-                file.Position = 16;
-                while (file.Position < file.Length)
-                {
-                    // Get the description and password from file
-                    byte[] description = GetFromFile(file, 64);
-                    byte[] password = GetFromFile(file, 256);
-
-                    Console.WriteLine(Encoding.ASCII.GetString(description));
-
-                    // Add description/password combo to the list
-                    combos.Add(new Combo(Encoding.ASCII.GetString(description), Encoding.ASCII.GetString(password)));
-                }
-            }
-            return combos;
-        }
-        private byte[] GetFromFile(FileStream file, int length)
-        {
-            // Gets data from the file
-            Console.WriteLine(file.Position);
-            byte[] array = new byte[length];
-            file.Read(array, 0, array.Length);
-
-            return array;
-        }
-        private void SignInObjects(Buttons a)
-        {
-            grdCombos.Enabled = false;
-            grpSign.Visible = false;
-            btnSignIn.Visible = false;
-            btnSignUp.Visible = false;
-            btnSignOut.Visible = false;
-            lblUser.Visible = false;
-            lblKey.Visible = false;
-            txtUser.Visible = false;
-            txtKey.Visible = false;
-            btnEnter.Visible = false;
-            btnCancel.Visible = false;
-            // Only make certain objects visible
-            switch (a)
-            {
-                case Buttons.SignedOut:
-                    btnSignIn.Visible = true;
-                    btnSignUp.Visible = true;
-                    txtKey.Text = "";
-                    txtKey.Text = "";
-                    break;
-                case Buttons.Login:
-                    grpSign.Visible = true;
-                    lblUser.Visible = true;
-                    lblKey.Visible = true;
-                    txtUser.Visible = true;
-                    txtKey.Visible = true;
-                    btnEnter.Visible = true;
-                    btnCancel.Visible = true;
-                    break;
-                case Buttons.SignedIn:
-                    grdCombos.Enabled = true;
-                    grpSign.Visible = false;
-                    btnSignOut.Visible = true;
-                    txtKey.Text = "";
-                    txtKey.Text = "";
-                    break;
-            }
         }
         private byte[] GetIV(string filePath)
         {
@@ -243,19 +274,6 @@ namespace PasswordManager
                 file.Close();
                 return IV;
             }
-        }
-        private bool ContainsIllegalCharacters(String s)
-        {
-            // Returns true if you're using characters unsuable in file names
-            string[] chars = new string[] { "/", @"\", ":", "*", "?", "\"", "<", ">", "|" };
-            foreach (string character in chars)
-            {
-                if (s.Contains(character))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }
