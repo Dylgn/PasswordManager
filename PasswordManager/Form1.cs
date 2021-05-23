@@ -57,8 +57,8 @@ namespace PasswordManager
                                 Encryptor.Encrypt(path + input + ".pm", provider.Key, provider.IV);
 
                                 // Tells user to save key
-                                MessageBox.Show("Use the following string to access your passwords in the future:\n\n" + System.Convert.ToBase64String(provider.Key) + "\n\nThis Key has been copied to your clipboard.\nDon't lose it, or you will lose your passwords forever!", "Key", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 Clipboard.SetText(System.Convert.ToBase64String(provider.Key));
+                                MessageBox.Show("Use the following string to access your passwords in the future:\n\n" + System.Convert.ToBase64String(provider.Key) + "\n\nThis Key has been copied to your clipboard.\nDon't lose it, or you will lose your passwords forever!", "Key", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                         else
@@ -121,9 +121,13 @@ namespace PasswordManager
                 file.Position = IV.Length;
                 foreach (Combo combo in combos)
                 {
-                    // Writes each combo to file
-                    file.Write(Encoding.ASCII.GetBytes(combo.Description), 0, 64);
-                    file.Write(Encoding.ASCII.GetBytes(combo.Password), 0, 256);
+                    // Skips empty rows in data grid
+                    if (!combo.Description.Trim('\0').Trim().Equals("") && !combo.Password.Trim('\0').Trim().Equals(""))
+                    {
+                        // Writes each combo to file
+                        file.Write(Encoding.ASCII.GetBytes(combo.Description), 0, 64);
+                        file.Write(Encoding.ASCII.GetBytes(combo.Password), 0, 256);
+                    }
                 }
             }
             // Encrypts file
@@ -132,6 +136,7 @@ namespace PasswordManager
             // Signs out
             key = "";
             fileName = "";
+            grdCombos.Rows.Clear();
             SignInObjects(Buttons.SignedOut);
         }
         private void btnCancel_Click(object sender, EventArgs e)
@@ -170,6 +175,8 @@ namespace PasswordManager
                     byte[] description = GetFromFile(file, 64);
                     byte[] password = GetFromFile(file, 256);
 
+                    Console.WriteLine(Encoding.ASCII.GetString(description));
+
                     // Add description/password combo to the list
                     combos.Add(new Combo(Encoding.ASCII.GetString(description), Encoding.ASCII.GetString(password)));
                 }
@@ -179,8 +186,10 @@ namespace PasswordManager
         private byte[] GetFromFile(FileStream file, int length)
         {
             // Gets data from the file
+            Console.WriteLine(file.Position);
             byte[] array = new byte[length];
             file.Read(array, 0, array.Length);
+
             return array;
         }
         private void SignInObjects(Buttons a)

@@ -63,6 +63,7 @@ namespace PasswordManager
             File.Move(output.Name, inputPath);
         }
 
+        // Custom exception for when user enters the wrong key
         public class IncorrectKeyException : Exception
         {
             public IncorrectKeyException() { }
