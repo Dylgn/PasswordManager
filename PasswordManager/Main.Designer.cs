@@ -29,8 +29,11 @@ namespace PasswordManager
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnSignIn = new System.Windows.Forms.Button();
             this.grdCombos = new System.Windows.Forms.DataGridView();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSignUp = new System.Windows.Forms.Button();
             this.title = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -41,8 +44,6 @@ namespace PasswordManager
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSignOut = new System.Windows.Forms.Button();
             this.grpSign = new System.Windows.Forms.GroupBox();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grdCombos)).BeginInit();
             this.grpSign.SuspendLayout();
             this.SuspendLayout();
@@ -71,6 +72,20 @@ namespace PasswordManager
             this.grdCombos.Name = "grdCombos";
             this.grdCombos.Size = new System.Drawing.Size(463, 252);
             this.grdCombos.TabIndex = 1;
+            // 
+            // Description
+            // 
+            this.Description.DataPropertyName = "Description";
+            this.Description.HeaderText = "Description";
+            this.Description.Name = "Description";
+            this.Description.Width = 150;
+            // 
+            // Password
+            // 
+            this.Password.DataPropertyName = "Password";
+            this.Password.HeaderText = "Password";
+            this.Password.Name = "Password";
+            this.Password.Width = 250;
             // 
             // btnSignUp
             // 
@@ -186,20 +201,6 @@ namespace PasswordManager
             this.grpSign.Text = "Sign In/Sign Up";
             this.grpSign.Visible = false;
             // 
-            // Description
-            // 
-            this.Description.DataPropertyName = "Description";
-            this.Description.HeaderText = "Description";
-            this.Description.Name = "Description";
-            this.Description.Width = 150;
-            // 
-            // Password
-            // 
-            this.Password.DataPropertyName = "Password";
-            this.Password.HeaderText = "Password";
-            this.Password.Name = "Password";
-            this.Password.Width = 250;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,6 +213,7 @@ namespace PasswordManager
             this.Controls.Add(this.grdCombos);
             this.Controls.Add(this.btnSignUp);
             this.Controls.Add(this.btnSignIn);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "Password Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);

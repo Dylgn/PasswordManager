@@ -69,7 +69,6 @@ namespace PasswordManager
             System.IO.Directory.CreateDirectory(path + "/PasswordManager");
             path = path + "/PasswordManager/";
         }
-
         private void btnSignIn_Click(object sender, EventArgs e)
         {
             SignInObjects(Buttons.Login);
