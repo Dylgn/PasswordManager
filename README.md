@@ -11,3 +11,6 @@ When you create a profile for the first time, you are given a key. This key is v
 also uses an "IV" (Initalization Vector) which is written to the beginning of the file. Don't try to edit the file when its encrypted, since the program relies heavily
 on the byte size of the file and where everything is located. 
 * It is recommended keeping a backup copy of this file just in case anything goes wrong.
+
+# How to Add/Edit Passwords
+The grid can only be interacted with when you're signed in. To add/edit a password in the grid, double-click on the cell and start editing. To delete a specific password from the list, click on the button to the left of the description you want to delete and press the 'Del' key on your keyboard.
