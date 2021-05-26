@@ -69,9 +69,9 @@ namespace PasswordManager
             this.Description,
             this.Password});
             this.grdCombos.Enabled = false;
-            this.grdCombos.Location = new System.Drawing.Point(12, 196);
+            this.grdCombos.Location = new System.Drawing.Point(12, 186);
             this.grdCombos.Name = "grdCombos";
-            this.grdCombos.Size = new System.Drawing.Size(463, 209);
+            this.grdCombos.Size = new System.Drawing.Size(463, 219);
             this.grdCombos.TabIndex = 1;
             // 
             // Description
@@ -211,7 +211,6 @@ namespace PasswordManager
             this.btnExit.TabIndex = 12;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Visible = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // frmMain

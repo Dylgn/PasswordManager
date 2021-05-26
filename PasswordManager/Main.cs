@@ -73,10 +73,6 @@ namespace PasswordManager
                     break;
             }
         }
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            
-        }
         // ACCOUNT CREATION
         private void btnSignUp_Click(object sender, EventArgs e)
         {
@@ -161,6 +157,10 @@ namespace PasswordManager
 
                         SignInObjects(Buttons.SignedIn);
                         ListCombos();
+
+                        // Makes Grid bigger when signed in
+                        grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 70);
+                        grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 335);
                     }
                     catch (Encryptor.IncorrectKeyException)
                     {
@@ -206,7 +206,6 @@ namespace PasswordManager
         private byte[] GetFromFile(FileStream file, int length)
         {
             // Gets data from the file
-            Console.WriteLine(file.Position);
             byte[] array = new byte[length];
             file.Read(array, 0, array.Length);
 
@@ -217,6 +216,19 @@ namespace PasswordManager
         {
             // Encrypts passwords when you sign out
             EncryptPasswords();
+            // Makes Grid smaller when signed out
+            grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 186);
+            grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 219);
+        }
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            // Encrypts passwords when you exit
+            if (!fileName.Equals(""))
+            {
+                // Encrypts passwords when you close the form
+                EncryptPasswords();
+            }
+            Application.Exit();
         }
         private void frmMain_FormClosing(object sender, EventArgs e)
         {
