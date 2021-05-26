@@ -46,10 +46,15 @@ namespace PasswordManager
             txtKey.Visible = false;
             btnEnter.Visible = false;
             btnCancel.Visible = false;
+            btnDelete.Visible = false;
             // Only make certain objects visible
             switch (a)
             {
                 case Buttons.SignedOut:
+                    // Makes Grid smaller when signed out
+                    grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 186);
+                    grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 219);
+                    // Object Visibility
                     btnSignIn.Visible = true;
                     btnSignUp.Visible = true;
                     txtUser.Text = "";
@@ -65,9 +70,14 @@ namespace PasswordManager
                     btnCancel.Visible = true;
                     break;
                 case Buttons.SignedIn:
+                    // Makes Grid bigger when signed in
+                    grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 70);
+                    grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 335);
+                    // Object Visibility
                     grdCombos.Enabled = true;
                     grpSign.Visible = false;
                     btnSignOut.Visible = true;
+                    btnDelete.Visible = true;
                     txtUser.Text = "";
                     txtKey.Text = "";
                     break;
@@ -161,10 +171,6 @@ namespace PasswordManager
 
                         SignInObjects(Buttons.SignedIn);
                         ListCombos();
-
-                        // Makes Grid bigger when signed in
-                        grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 70);
-                        grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 335);
                     }
                     catch (Encryptor.IncorrectKeyException)
                     {
@@ -220,9 +226,6 @@ namespace PasswordManager
         {
             // Encrypts passwords when you sign out
             EncryptPasswords();
-            // Makes Grid smaller when signed out
-            grdCombos.Location = new System.Drawing.Point(grdCombos.Location.X, 186);
-            grdCombos.Size = new System.Drawing.Size(grdCombos.Size.Width, 219);
         }
         private void btnExit_Click(object sender, EventArgs e)
         {
@@ -308,6 +311,12 @@ namespace PasswordManager
                     {
                         // Only deletes file if you enter the correct key
                         File.Delete(path + fileName);
+
+                        // Signs out
+                        key = "";
+                        fileName = "";
+                        grdCombos.Rows.Clear();
+                        SignInObjects(Buttons.SignedOut);
                     } else
                     {
                         MessageBox.Show("The wrong key was entered!", "Delete Profile", MessageBoxButtons.OK, MessageBoxIcon.Error);
