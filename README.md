@@ -1,4 +1,4 @@
-# PasswordManager
+# Password Manager
 A password manager that encrypts your passwords using AES.
 
 # Admin Privileges
