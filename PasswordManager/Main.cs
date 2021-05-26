@@ -14,6 +14,19 @@ namespace PasswordManager
         String key = "";
 
         // UI
+        public frmMain()
+        {
+            InitializeComponent();
+        }
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            System.IO.Directory.CreateDirectory(path + "/PasswordManager");
+            path = path + "/PasswordManager/";
+        }
+        private void btnSignIn_Click(object sender, EventArgs e)
+        {
+            SignInObjects(Buttons.Login);
+        }
         private enum Buttons
         {
             SignedOut = 1,
@@ -60,18 +73,9 @@ namespace PasswordManager
                     break;
             }
         }
-        public frmMain()
+        private void btnExit_Click(object sender, EventArgs e)
         {
-            InitializeComponent();
-        }
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            System.IO.Directory.CreateDirectory(path + "/PasswordManager");
-            path = path + "/PasswordManager/";
-        }
-        private void btnSignIn_Click(object sender, EventArgs e)
-        {
-            SignInObjects(Buttons.Login);
+            
         }
         // ACCOUNT CREATION
         private void btnSignUp_Click(object sender, EventArgs e)

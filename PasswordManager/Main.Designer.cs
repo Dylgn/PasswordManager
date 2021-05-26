@@ -44,6 +44,7 @@ namespace PasswordManager
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSignOut = new System.Windows.Forms.Button();
             this.grpSign = new System.Windows.Forms.GroupBox();
+            this.btnExit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdCombos)).BeginInit();
             this.grpSign.SuspendLayout();
             this.SuspendLayout();
@@ -70,7 +71,7 @@ namespace PasswordManager
             this.grdCombos.Enabled = false;
             this.grdCombos.Location = new System.Drawing.Point(12, 196);
             this.grdCombos.Name = "grdCombos";
-            this.grdCombos.Size = new System.Drawing.Size(463, 252);
+            this.grdCombos.Size = new System.Drawing.Size(463, 209);
             this.grdCombos.TabIndex = 1;
             // 
             // Description
@@ -175,7 +176,7 @@ namespace PasswordManager
             // btnSignOut
             // 
             this.btnSignOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSignOut.Location = new System.Drawing.Point(201, 68);
+            this.btnSignOut.Location = new System.Drawing.Point(12, 423);
             this.btnSignOut.Name = "btnSignOut";
             this.btnSignOut.Size = new System.Drawing.Size(70, 25);
             this.btnSignOut.TabIndex = 10;
@@ -201,12 +202,25 @@ namespace PasswordManager
             this.grpSign.Text = "Sign In/Sign Up";
             this.grpSign.Visible = false;
             // 
+            // btnExit
+            // 
+            this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExit.Location = new System.Drawing.Point(427, 423);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(48, 25);
+            this.btnExit.TabIndex = 12;
+            this.btnExit.Text = "Exit";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Visible = false;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(491, 460);
+            this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnSignOut);
             this.Controls.Add(this.grpSign);
             this.Controls.Add(this.title);
@@ -242,6 +256,7 @@ namespace PasswordManager
         private System.Windows.Forms.GroupBox grpSign;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
         private System.Windows.Forms.DataGridViewTextBoxColumn Password;
+        private System.Windows.Forms.Button btnExit;
     }
 }
 
