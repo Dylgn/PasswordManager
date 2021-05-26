@@ -113,7 +113,11 @@ namespace PasswordManager
                     }
                 } else
                 {
-                    MessageBox.Show("Your username must be between 1-16 characters!", "Create Profile", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Only shows messagebox if something was entered (so that the cancel button doesn't bring an error)
+                    if (input.Length != 0)
+                    {
+                        MessageBox.Show("Your username must be between 1-16 characters!", "Create Profile", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }   
             }
         }
@@ -288,6 +292,27 @@ namespace PasswordManager
                 file.Read(IV, 0, IV.Length);
                 file.Close();
                 return IV;
+            }
+        }
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            // Deletes file currently open
+            DialogResult result = MessageBox.Show("Are you sure you want to delete this file? It will be gone forever!", "Delete Profile", MessageBoxButtons.YesNo);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                string input = Microsoft.VisualBasic.Interaction.InputBox("Enter the key associated to this file.", "Delete Profile", "", this.Left + (this.Width / 2), this.Top + (this.Width / 2));
+                // Ignores input if nothing is there (cancel button returns empty string)
+                if (input.Length != 0)
+                {
+                    if (input.Equals(key))
+                    {
+                        // Only deletes file if you enter the correct key
+                        File.Delete(path + fileName);
+                    } else
+                    {
+                        MessageBox.Show("The wrong key was entered!", "Delete Profile", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
     }
